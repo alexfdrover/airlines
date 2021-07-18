@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import data from './data'
-const routes = data.routes
+
+let { routes, getAirlineById, getAirportByCode } = data
 
 const App = () => (
   <div className="app">
@@ -14,15 +15,20 @@ const App = () => (
       </p>
     </section>
   <table>
-    {routes.map(route => {
-      return (
-        <tr>
-          <td>{route.airline}</td>
-          <td>{route.src}</td>
-          <td>{route.dest}</td>
-        </tr>
-      )
-    })}
+    <th>Airline</th>
+    <th>Source Airport</th>
+    <th>Destination Airport</th>
+    <tbody>
+      {routes.map(route => {
+        return (
+          <tr>
+            <td>{getAirlineById(route.airline)}</td>
+            <td>{getAirportByCode(route.src)}</td>
+            <td>{getAirportByCode(route.dest)}</td>
+          </tr>
+        )
+      })}
+    </tbody>
   </table>
   </div>
 )
