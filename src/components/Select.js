@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Select = ({ options, valueKey, titleKey, allTitle, value, onSelect }) => {
+const Select = ({ options, allTitle, onSelect }) => {
   const displayOptions = options.map(option => {
     return <option key={option}>{option}</option>
   })

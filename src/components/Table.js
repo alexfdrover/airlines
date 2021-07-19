@@ -101,21 +101,21 @@ const Table = (props) => {
   return (
     <div>
       Show routes on
-        <Select options={airlineOptions}
-          valueKey='id'
-          titleKey='name'
+        <Select
+          options={airlineOptions}
           allTitle='All Airlines'
-          value=''
           onSelect={changeAirlineHandler}
         />
-      fly in or out of
-        <Select options={airportOptions}
-          valueKey='id'
-          titleKey='name'
+      flying in or out of
+        <Select
+          options={airportOptions}
           allTitle='All Airports'
-          value=''
           onSelect={changeAirportHandler}
         />
+      <button onClick={() => {
+        setState({airlineFilter: 'all', airportFilter: 'all', view: routes});
+
+      }}>Show All Routes</button>
 
       <table>
         <thead>
