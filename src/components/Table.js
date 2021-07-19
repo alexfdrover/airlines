@@ -45,8 +45,18 @@ const Table = (props) => {
     setStart(start - PAGE_SIZE)
   }
 
-  const airlineOptions = airlines.map(airline => airline.name)
-  const airportOptions = airports.map(airport => `${airport.name} (${airport.code})`)
+  const airlineOptions = airlines.map(airline => {
+    return {
+      key: airline.id,
+      name: airline.name,
+    }
+  })
+  const airportOptions = airports.map(airport => {
+    return {
+      key: airport.code,
+      name: airport.name
+    }
+  })
 
   const filterRoutes = (airlineFilter, airportFilter) => {
     if (airlineFilter === 'all' && airportFilter === 'all') {
@@ -105,12 +115,16 @@ const Table = (props) => {
           options={airlineOptions}
           allTitle='All Airlines'
           onSelect={changeAirlineHandler}
+          filterType='airline'
+          filterValue={state.airlineFilter}
         />
       flying in or out of
         <Select
           options={airportOptions}
           allTitle='All Airports'
           onSelect={changeAirportHandler}
+          filterType='airport'
+          filterValue={state.airportFilter}
         />
       <button onClick={() => {
         setState({airlineFilter: 'all', airportFilter: 'all', view: routes});
