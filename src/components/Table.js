@@ -11,9 +11,11 @@ const Table = (props) => {
   const [start, setStart] = useState(0)
   const PAGE_SIZE = 25
   
-  const [currentRoutes, setCurrentRoutes] = useState(routes)
-  const [currentAirlineFilter, setCurrentAirlineFilter] = useState(0)
-  const [currentAirportFilter, setCurrentAirportFilter] = useState(null)
+  const [state, setState] = useState({
+    airlineFilter: 'all',
+    airportFilter: 'all',
+    view: routes
+  })
 
   const genKey = route => {
     return `${route.airline}/${route.src}/${route.dest}`
@@ -33,9 +35,9 @@ const Table = (props) => {
     return <th key={col.name}>{col.name}</th>
   })
   
-  const paginationMessage = `Showing ${start} - ${start + PAGE_SIZE} routes of total ${currentRoutes.length} routes`
+  const paginationMessage = `Showing ${start} - ${start + PAGE_SIZE} routes of total ${state.view.length} routes`
   const nextPage = () => {
-    if (start === (currentRoutes.length - PAGE_SIZE)) return
+    if (start === (state.view.length - PAGE_SIZE)) return
     setStart(start + PAGE_SIZE)
   }
   const prevPage = () => {
@@ -46,32 +48,53 @@ const Table = (props) => {
   const airlineOptions = airlines.map(airline => airline.name)
   const airportOptions = airports.map(airport => `${airport.name} (${airport.code})`)
 
+  const filterRoutes = (airlineFilter, airportFilter) => {
+    if (airlineFilter === 'all' && airportFilter === 'all') {
+      return routes
+    } else if (airlineFilter !== 'all' && airportFilter === 'all') {
+      return routes.filter(route => {
+        return (route.airline === airlineFilter)
+      })
+    } else if (airlineFilter === 'all' && airportFilter !== 'all') {
+      return routes.filter(route => {
+        return route.src === airportFilter || route.dest === airportFilter
+      })
+    } else {
+      return routes.filter(route => {
+        return (route.airline === airlineFilter && (route.src === airportFilter || route.dest === airportFilter))
+      })
+    }
+  }
+
   const changeAirlineHandler = (event) => {
     setStart(0)
     const airline = event.target.value
+    let { airlineFilter, airportFilter, view } = state
+
     if (airline === 'All Airlines') {
-      setCurrentRoutes(routes)
-      return
+      airlineFilter = 'all'
+    } else {
+      airlineFilter = airlines.find(n => n.name === airline).id
     }
-    const airlineId = airlines.find(n => n.name === airline).id
-    const selection = routes.filter(route => route.airline === airlineId)
-    setCurrentRoutes(selection)
+    view = filterRoutes(airlineFilter, airportFilter)
+    setState({airlineFilter, airportFilter, view})
   }
 
   const changeAirportHandler = (event) => {
     setStart(0)
     const airport = event.target.value.split(' (')[0]
+    let { airlineFilter, airportFilter, view } = state
+
     if (airport === 'All Airports') {
-      setCurrentRoutes(routes)
-      return
+      airportFilter = 'all'
+    } else {
+      airportFilter = airports.find(n => n.name === airport).code
     }
-    console.log(airport)
-    const airportCode = airports.find(n => n.name === airport).code
-    const selection = routes.filter(route => route.src === airportCode || route.dest === airportCode)
-    setCurrentRoutes(selection)
+    view = filterRoutes(airlineFilter, airportFilter)
+    setState({airlineFilter, airportFilter, view})
   }
 
-  const bodyRows = currentRoutes.map(route => {
+  const bodyRows = state.view.map(route => {
     return createRow(route)
   }).slice(start, start + PAGE_SIZE)
   
