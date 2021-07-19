@@ -6,6 +6,7 @@ const Table = (props) => {
   const cols = props.columns
   const routes = props.rows
   const airlines = props.airlines
+  const airports = props.airports
   const [start, setStart] = useState(0)
   const [currentRoutes, setCurrentRoutes] = useState(routes)
   const PAGE_SIZE = 25
@@ -38,9 +39,10 @@ const Table = (props) => {
     setStart(start - PAGE_SIZE)
   }
 
-  const options = airlines.map(airline => airline.name)
+  const airlineOptions = airlines.map(airline => airline.name)
+  const airportOptions = airports.map(airport => `${airport.name} (${airport.code})`)
 
-  const changeAirportHandler = (event) => {
+  const changeAirlineHandler = (event) => {
     setStart(0)
     const airline = event.target.value
     if (airline === 'All Airlines') {
@@ -52,19 +54,41 @@ const Table = (props) => {
     setCurrentRoutes(selection)
   }
 
+  const changeAirportHandler = (event) => {
+    setStart(0)
+    const airport = event.target.value.split(' (')[0]
+    if (airport === 'All Airports') {
+      setCurrentRoutes(routes)
+      return
+    }
+    console.log(airport)
+    const airportCode = airports.find(n => n.name === airport).code
+    const selection = routes.filter(route => route.src === airportCode || route.dest === airportCode)
+    setCurrentRoutes(selection)
+  }
+
   const bodyRows = currentRoutes.map(route => {
     return createRow(route)
   }).slice(start, start + PAGE_SIZE)
   
   return (
     <div>
-      Show routes on <Select options={options}
-                             valueKey='id'
-                             titleKey='name'
-                             allTitle='All Airlines'
-                             value=''
-                             onSelect={changeAirportHandler}
-                      /> fly in or out of 
+      Show routes on
+        <Select options={airlineOptions}
+          valueKey='id'
+          titleKey='name'
+          allTitle='All Airlines'
+          value=''
+          onSelect={changeAirlineHandler}
+        />
+      fly in or out of
+        <Select options={airportOptions}
+          valueKey='id'
+          titleKey='name'
+          allTitle='All Airports'
+          value=''
+          onSelect={changeAirportHandler}
+        />
 
       <table>
         <thead>
