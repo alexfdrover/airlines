@@ -3,13 +3,17 @@ import Select from './Select'
 
 const Table = (props) => {
   const { format, columns: cols, rows: routes, airlines, airports } = props
-  const [start, setStart] = useState(0)
   const PAGE_SIZE = 25
-  
+
+  const [start, setStart] = useState(0)
   const [state, setState] = useState({
     airlineFilter: 'all',
     airportFilter: 'all',
     view: routes
+  })
+  
+  const headerCells = cols.map(col => {
+    return <th key={col.name}>{col.name}</th>
   })
 
   const genKey = route => {
@@ -26,15 +30,13 @@ const Table = (props) => {
     )
   }
 
-  const headerCells = cols.map(col => {
-    return <th key={col.name}>{col.name}</th>
-  })
-  
   const paginationMessage = `Showing ${start} - ${start + PAGE_SIZE} routes of total ${state.view.length} routes`
+
   const nextPage = () => {
     if (start === (state.view.length - PAGE_SIZE)) return
     setStart(start + PAGE_SIZE)
   }
+
   const prevPage = () => {
     if (start === 0) return
     setStart(start - PAGE_SIZE)
