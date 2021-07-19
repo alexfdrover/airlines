@@ -7,9 +7,11 @@ const Table = (props) => {
   const routes = props.rows
   const airlines = props.airlines
   const airports = props.airports
+
   const [start, setStart] = useState(0)
-  const [currentRoutes, setCurrentRoutes] = useState(routes)
   const PAGE_SIZE = 25
+  
+  const [currentRoutes, setCurrentRoutes] = useState(routes)
 
   const genKey = route => {
     return `${route.airline}/${route.src}/${route.dest}`
@@ -50,7 +52,7 @@ const Table = (props) => {
       return
     }
     const airlineId = airlines.find(n => n.name === airline).id
-    const selection = routes.filter(route => route.airline === airlineId)
+    const selection = currentRoutes.filter(route => route.airline === airlineId)
     setCurrentRoutes(selection)
   }
 
@@ -63,7 +65,7 @@ const Table = (props) => {
     }
     console.log(airport)
     const airportCode = airports.find(n => n.name === airport).code
-    const selection = routes.filter(route => route.src === airportCode || route.dest === airportCode)
+    const selection = currentRoutes.filter(route => route.src === airportCode || route.dest === airportCode)
     setCurrentRoutes(selection)
   }
 
