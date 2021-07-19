@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Select from './Select'
 
 const Table = (props) => {
   const format = props.format
@@ -37,37 +38,18 @@ const Table = (props) => {
     setStart(start - PAGE_SIZE)
   }
 
-  const filterByAirline = (() => {
-    const uniqueAirlines = routes
-      .reduce((acc, route) => {
-        return (!acc.includes(route.airline)) ? acc.concat(route.airline) : acc
-      }, [])
-      .map(airline => [format('airline', airline), airline])
+  const options = airlines.map(airline => airline.name)
 
-    const changeHandler = (event) => {
-      const airline = event.target.value
-      if (airline === 'All Airlines') {
-        setCurrentRoutes(routes)
-        return
-      }
-      const airlineId = airlines.find(n => n.name === airline).id
-      const selection = routes.filter(route => route.airline === airlineId)
-      setCurrentRoutes(selection)
-    }
-
-    const populatedOptions = uniqueAirlines.map(([name, key]) => {
-      return (
-        <option key={key}>{name}</option>
-      )
-    })
-
-    return (
-      <select onChange={changeHandler}>
-        <option>All Airlines</option>
-        {populatedOptions}
-      </select>
-    )
-  })()
+  const changeHandler = (event) => {
+  const airline = event.target.value
+  if (airline === 'All Airlines') {
+    setCurrentRoutes(routes)
+    return
+  }
+  const airlineId = airlines.find(n => n.name === airline).id
+  const selection = routes.filter(route => route.airline === airlineId)
+  setCurrentRoutes(selection)
+  }
 
   const bodyRows = currentRoutes.map(route => {
     return createRow(route)
@@ -75,7 +57,13 @@ const Table = (props) => {
   
   return (
     <div>
-      Show routes on {filterByAirline} fly in or out of 
+      Show routes on <Select options={options}
+                             valueKey='id'
+                             titleKey='name'
+                             allTitle='All Airlines'
+                             value=''
+                             onSelect={changeHandler}
+                      /> fly in or out of 
 
       <table>
         <thead>
