@@ -40,15 +40,16 @@ const Table = (props) => {
 
   const options = airlines.map(airline => airline.name)
 
-  const changeHandler = (event) => {
-  const airline = event.target.value
-  if (airline === 'All Airlines') {
-    setCurrentRoutes(routes)
-    return
-  }
-  const airlineId = airlines.find(n => n.name === airline).id
-  const selection = routes.filter(route => route.airline === airlineId)
-  setCurrentRoutes(selection)
+  const changeAirportHandler = (event) => {
+    setStart(0)
+    const airline = event.target.value
+    if (airline === 'All Airlines') {
+      setCurrentRoutes(routes)
+      return
+    }
+    const airlineId = airlines.find(n => n.name === airline).id
+    const selection = routes.filter(route => route.airline === airlineId)
+    setCurrentRoutes(selection)
   }
 
   const bodyRows = currentRoutes.map(route => {
@@ -62,7 +63,7 @@ const Table = (props) => {
                              titleKey='name'
                              allTitle='All Airlines'
                              value=''
-                             onSelect={changeHandler}
+                             onSelect={changeAirportHandler}
                       /> fly in or out of 
 
       <table>
