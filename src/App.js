@@ -29,7 +29,7 @@ const App = () => (
         Welcome to the app!
       </p>
     </section>
-    <Table className='routes-table' columns={columns} rows={routes} format={formatValue} />
+    <Table className='routes-table' columns={columns} rows={routes} format={formatValue} airlines={DATA.airlines} />
   </div>
 )
 
