@@ -2,12 +2,7 @@ import React, { useState } from 'react'
 import Select from './Select'
 
 const Table = (props) => {
-  const format = props.format
-  const cols = props.columns
-  const routes = props.rows
-  const airlines = props.airlines
-  const airports = props.airports
-
+  const { format, columns: cols, rows: routes, airlines, airports } = props
   const [start, setStart] = useState(0)
   const PAGE_SIZE = 25
   
@@ -51,6 +46,7 @@ const Table = (props) => {
       name: airline.name,
     }
   })
+
   const airportOptions = airports.map(airport => {
     return {
       key: airport.code,
@@ -128,8 +124,9 @@ const Table = (props) => {
         />
       <button onClick={() => {
         setState({airlineFilter: 'all', airportFilter: 'all', view: routes});
-
-      }}>Show All Routes</button>
+      }}>
+        Show All Routes
+      </button>
 
       <table>
         <thead>
